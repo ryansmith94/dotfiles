@@ -1,0 +1,23 @@
+[core]
+  editor = code --wait
+  eol = lf
+[push]
+  default = current
+[alias]
+  l = log --pretty=format:' %C(bold)%C(magenta)%an\t%C(red) %s %C(yellow)%cr\b\b\b\b%Creset' --abbrev-commit --date=relative -10
+  s = status
+  c = "!f() { git add -A; git commit -a -m \"$1\"; git push; }; f \"$1\""
+  untrack = update-index --assume-unchanged
+  track = update-index --no-assume-unchanged
+  undolast = reset --soft HEAD~1
+  repair = "!f() { git branch --set-upstream-to=origin/$1 $1; }; f \"$(git rev-parse --abbrev-ref HEAD)\""
+  newbranch = "!f() { git checkout master; git pull; git checkout -b $1; }; f \"$1\""
+  # Temporary commits.
+  tc = "!f() { git c \"Temporary commit.\"; echo 'Created temporary commit.'; }; f"
+  rt = "!f() { git pull; git undolast; git push -f; git reset HEAD .; git s; echo 'Removed temporary commit.'; }; f"
+  # LL Specific.
+  upgrade = "!f() { git newbranch \"os-merge-$1\" && git fetch os && git merge os/master; }; f \"$1\""
+[color]
+  ui = true
+[init]
+	defaultBranch = main
